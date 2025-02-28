@@ -1,0 +1,9 @@
+{
+  "ownerId": "generatedOwnerId",
+  "trialStart": "generatedStartDate",
+  "trialEnd": "generatedEndDate",
+  "type": "generatedSubscriptionType",
+  "subscription": "generatedSubscriptionStatus",
+  "delete": false
+}
+

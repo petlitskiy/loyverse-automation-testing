@@ -1,1 +1,1 @@
-# loyverse-automation-testing
+# The BrowserStack GitHub Action workflow

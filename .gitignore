@@ -1,0 +1,9 @@
+target
+logs
+node_modules
+applicationLogs
+browserstack-*
+target
+**/target
+.idea
+.applicationLogs

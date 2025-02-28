@@ -1,0 +1,48 @@
+buildName: BackOffice Automation Testing
+# Use `projectName` to set the name of your project. Example, Marketing Website
+projectName: Loyverse Backoffice Automation
+
+# Use `framework` to set the framework of your project. Example, testng, cucumber, cucumber-testng
+framework: cucumber-testng
+platforms:
+  #  - deviceName: Google Pixel 7 Pro
+  #    osVersion: 13.0
+  #    browserName: android
+  #    deviceOrientation: portrait
+  #  - deviceName: iPhone 14 Pro
+  #    osVersion: 16
+  #    browserName: ios
+  #    deviceOrientation: portrait
+  - os: Windows
+    osVersion: 11
+    browserName: Chrome
+    browserVersion: 125.0
+#  - os: Windows
+#    osVersion: 11
+#    browserName: Firefox
+#    browserVersion: latest
+#  - os: OS X
+#    osVersion: Ventura
+#    browserName: Safari
+#    browserVersion: 16.0
+
+# ==========================================
+# BrowserStack Local
+# (For localhost, staging/private websites)
+# ==========================================
+# Set browserStackLocal to true if your website under test is not accessible publicly over the internet
+# Learn more about how BrowserStack Local works here -> https://www.browserstack.com/docs/automate/selenium/local-testing-introduction
+browserstackLocal: false # <boolean> (Default false)
+# Example 2 - If you have configured 1 platform and set `parallelsPerPlatform` as 5, a total of 5 (1 * 5) parallel threads will be used on BrowserStack
+parallelsPerPlatform: 1
+# ===================
+# Debugging features
+# ===================
+networkLogsOptions:
+  captureContent: true # capture the content of the network requests like response.
+interactiveDebugging: true
+debug: true # <boolean> # Set to true if you need screenshots for every selenium command ran
+networkLogs: true # <boolean> Set to true to enable HAR logs capturing
+consoleLogs: errors # <string> Remote browser's console debug levels to be printed (Default: errors)
+# Available options are `disable`, `errors`, `warnings`, `info`, `verbose` (Default: errors)
+selfHeal: true # <boolean> Set to true to enable self-healing capabilities

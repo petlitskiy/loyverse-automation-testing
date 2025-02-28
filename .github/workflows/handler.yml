@@ -1,0 +1,75 @@
+run-name: "${{ github.event.pull_request.head.ref || github.ref_name || github.head_ref}} (${{ github.event_name || github.event.review.state }})"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
+permissions:
+  contents: write
+  checks: write
+  actions: write
+jobs:
+  task:
+    runs-on: ubuntu-latest
+    env:
+      TEST_ENV: dev
+      BROWSERSTACK_BUILD_NAME: BackOffice Automation Testing
+    steps:
+      - uses: actions/checkout@main
+      - run: |
+          mkdir -p ~/.m2/repository
+          chmod 775 -R ~/.m2/
+      - name: Cache of Maven
+        if: always()
+        uses: actions/cache@main
+        with:
+          save-always: true
+          path: "~/.m2/repository"
+          key: "${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}"
+          restore-keys: "${{ runner.os }}-maven-"
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@main
+        if: always()
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: make build
+      - run: |
+          echo "BROWSERSTACK_BUILD_NAME=\"$(cat browserstack.yml | yq .buildName) ${{ env.TEST_ENV }} $(date +"%Y%m%d-%H%M%S-%3N")\"" >> $GITHUB_ENV
+          echo "BROWSERSTACK_USERNAME=${{ secrets.BROWSERSTACK_USER }}" >> $GITHUB_ENV
+          echo "BROWSERSTACK_ACCESS_KEY=${{ secrets.BROWSERSTACK_PASSWORD }}" >> $GITHUB_ENV
+      - run: make test
+      - uses: Loyverse/loyverse-actions/browserstack-report@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          project-name: Loyverse Backoffice Automation
+          build-name: ${{ env.BROWSERSTACK_BUILD_NAME }}
+          user: ${{ secrets.BROWSERSTACK_USER }}
+          password: ${{ secrets.BROWSERSTACK_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Get Cucumber html-report
+          path: '${{ github.workspace }}/target/html-report/cucumber.html'
+          if-no-files-found: ignore
+          retention-days: 5
+      # Workaround::
+      # https://github.com/dorny/test-reporter/issues/387
+      - name: WorkAround commit to assigh checks reports to current run
+        if: ${{ (github.event_name != 'workflow_dispatch') && (success() || failure()) }}
+        run: |
+            git config --global user.email "noreply@local.com"
+            git config --global user.name "GitHub Actions"
+            date +%d.%m.%Y > date.log
+            git add date.log
+            git commit -am "A little bit update (the date in date.log due https://github.com/dorny/test-reporter/issues/387)" 2>/dev/null
+            git push origin HEAD:${{ github.head_ref || github.ref_name }} 2>/dev/null
+      - uses: Loyverse/loyverse-actions/delete-runs@main
+        if: always()
+        with:
+          keep-minimum-runs: 10
+          token: ${{ secrets.GITHUB_TOKEN }}

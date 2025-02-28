@@ -1,0 +1,13 @@
+{
+  "email": "generatedEmailID",
+  "password": "generatedPwd",
+  "name": "Italian Cafe",
+  "lang": "eng",
+  "cabinetLang": "eng",
+  "country": "givenRegistrationCountry",
+  "brandName": "loyVerse",
+  "tsZoneOffset": "7200000",
+  "timeZoneName": "Europe/Kiev",
+  "referralString": "null",
+  "recaptchaResponse": ""
+}

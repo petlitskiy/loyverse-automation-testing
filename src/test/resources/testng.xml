@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="BDD Test Suite" verbose="1">
+
+    <!-- <listeners>
+         <provider class-name="com.backoffice.provider.TestRunnerListener"/>
+     </listeners>-->
+    <test name="Cucumber Tests">
+        <classes>
+            <class name="com.backoffice.runner.Runner"/>
+        </classes>
+    </test>
+</suite>
